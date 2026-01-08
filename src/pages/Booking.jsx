@@ -43,14 +43,46 @@ export default function Booking() {
       setShowComingSoon(true);
       return;
     }
-    
+
     setIsSubmitting(true);
-    
-    // Simulate processing time (demo mode - not actually saving)
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    setIsSubmitting(false);
-    setIsComplete(true);
+
+    try {
+      // Prepare booking data for API
+      const bookingPayload = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        date: formData.date ? format(formData.date, 'yyyy-MM-dd') : null,
+        time_window: formData.time_window,
+        address: formData.address,
+        vehicle_type: formData.vehicle_type,
+        notes: formData.notes
+      };
+
+      // Submit booking to Netlify function
+      const response = await fetch('/.netlify/functions/create-booking', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(bookingPayload)
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to create booking');
+      }
+
+      // Success
+      setIsSubmitting(false);
+      setIsComplete(true);
+
+    } catch (error) {
+      console.error('Booking error:', error);
+      alert(error.message || 'Failed to create booking. Please try again.');
+      setIsSubmitting(false);
+    }
   };
 
   if (showComingSoon) {
