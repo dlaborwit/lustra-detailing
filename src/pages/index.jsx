@@ -38,9 +38,9 @@ function PagesContent() {
     
     return (
         <Layout currentPageName={currentPage}>
-            <Routes>            
-                
-                    <Route path="/" element={<About />} />
+            <Routes>
+
+                    <Route path="/" element={<Home />} />
                 
                 
                 <Route path="/About" element={<About />} />
