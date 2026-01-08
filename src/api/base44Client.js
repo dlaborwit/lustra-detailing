@@ -1,8 +1,16 @@
-import { createClient } from '@base44/sdk';
-// import { getAccessToken } from '@base44/sdk/utils/auth-utils';
+// Stub for removed Base44 SDK
+// This file maintains the import structure but doesn't connect to any backend
 
-// Create a client with authentication required
-export const base44 = createClient({
-  appId: "6926733f684a8f99b361baaa", 
-  requiresAuth: true // Ensure authentication is required for all operations
-});
+export const base44 = {
+  entities: {
+    Booking: {
+      filter: async () => [],
+      create: async (data) => ({ id: Date.now(), ...data })
+    }
+  },
+  integrations: {
+    Core: {
+      SendEmail: async () => console.log('Email function disabled - backend not connected')
+    }
+  }
+};

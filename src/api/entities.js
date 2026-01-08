@@ -1,11 +1,14 @@
-import { base44 } from './base44Client';
+// Stub entities - backend functionality removed
 
+export const Booking = {
+  filter: async () => [],
+  create: async (data) => ({ id: Date.now(), ...data })
+};
 
-export const Booking = base44.entities.Booking;
+export const ContactMessage = {
+  create: async (data) => ({ id: Date.now(), ...data })
+};
 
-export const ContactMessage = base44.entities.ContactMessage;
-
-
-
-// auth sdk:
-export const User = base44.auth;
+export const User = {
+  // Auth functionality disabled
+};
