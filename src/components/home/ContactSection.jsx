@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { base44 } from "@/api/base44Client";
 import { Loader2, CheckCircle } from "lucide-react";
 import AnimatedSection from "../AnimatedSection";
 
@@ -21,12 +20,33 @@ export default function ContactSection() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    await base44.entities.ContactMessage.create(formData);
-    
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    setFormData({ name: '', email: '', phone: '', message: '' });
+
+    try {
+      // Submit to Netlify function
+      const response = await fetch('/.netlify/functions/submit-contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to submit contact form');
+      }
+
+      // Success
+      setIsSubmitting(false);
+      setIsSubmitted(true);
+      setFormData({ name: '', email: '', phone: '', message: '' });
+
+    } catch (error) {
+      console.error('Contact form error:', error);
+      alert(error.message || 'Failed to submit. Please try again.');
+      setIsSubmitting(false);
+    }
   };
 
   return (
